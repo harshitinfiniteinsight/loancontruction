@@ -27,7 +27,7 @@ export default function LoanDetailPage() {
     const loanData = getLoanById(loanId);
     if (loanData) {
       setLoan(loanData);
-      setBudget(getBudgetByLoanId(loanId));
+      setBudget(getBudgetByLoanId(loanId) || null);
       setDraws(getDrawsByLoanId(loanId));
     }
   }, [loanId, role, router]);

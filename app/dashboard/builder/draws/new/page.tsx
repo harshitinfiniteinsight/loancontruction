@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Layout from '@/components/Layout';
 import { mockLoans, getBudgetByLoanId } from '@/lib/mockData';
@@ -8,7 +8,7 @@ import { BudgetLine } from '@/lib/types';
 import Link from 'next/link';
 import { Plus, X, Upload } from 'lucide-react';
 
-export default function NewDrawPage() {
+function NewDrawPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedLoan, setSelectedLoan] = useState<string>('');
@@ -125,7 +125,7 @@ export default function NewDrawPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {budget.lines.filter(line => line.remainingAmount > 0).map((line) => (
+                      {budget.lines.filter((line: BudgetLine) => line.remainingAmount > 0).map((line: BudgetLine) => (
                         <tr key={line.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {line.category}
@@ -241,6 +241,18 @@ export default function NewDrawPage() {
         )}
       </div>
     </Layout>
+  );
+}
+
+export default function NewDrawPage() {
+  return (
+    <Suspense fallback={
+      <Layout role="builder" title="Builder Portal">
+        <div className="text-center py-12">Loading...</div>
+      </Layout>
+    }>
+      <NewDrawPageContent />
+    </Suspense>
   );
 }
 
